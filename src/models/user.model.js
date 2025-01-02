@@ -4,13 +4,13 @@ import bcrypt from "bcrypt";
 
 const userSchema = new mongoose.Schema(
   {
-    username: {
+    userName: {
       type: String,
       required: true,
       unique: true,
       lowercase: true,
       trim: true,
-      index,
+      index: true,
     },
     email: {
       type: String,
@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       trim: true,
     },
-    fullname: {
+    fullName: {
       type: String,
       required: true,
       trim: true,
@@ -32,7 +32,7 @@ const userSchema = new mongoose.Schema(
     coverImage: {
       type: String, // cloudinary url - similar to AWS
     },
-    watchHistory: [{ type: Schema.Types.ObjectId, ref: "Video" }],
+    watchHistory: [{ type: mongoose.Schema.Types.ObjectId, ref: "Video" }],
     password: {
       type: String,
       required: [true, "Password is required"],
@@ -48,7 +48,7 @@ const userSchema = new mongoose.Schema(
 
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
-  this.password = bcrypt.hash(this.password);
+  this.password = await bcrypt.hash(this.password, 8);
   next();
 });
 
@@ -61,8 +61,8 @@ userSchema.methods.generateAccessToken = async function () {
     {
       _id: this._id,
       email: this.email,
-      username: this.username,
-      fullName: this.fullname,
+      userName: this.userName,
+      fullName: this.fullName,
     },
     process.env.ACCESS_TOKEN_SECRET,
     {
@@ -82,4 +82,4 @@ userSchema.methods.generateRefreshToken = async function () {
   );
 };
 
-export const User = mongoose.Model("User", userSchema);
+export const User = mongoose.model("User", userSchema);
