@@ -10,4 +10,13 @@ const existingUser = await User.findOne({
 // but the User with capital one we have to use for all the mongoose methods
 
 //4. findById()
-const user = await User.findById(userId);
+// const user = await User.findById(userId);
+
+//5. findByIdAndUpdate()
+// await User.findByIdAndUpdate(
+//   req?.user?._id,
+//   {
+//     $set: { fullName, email },
+//   },
+//   { new: true }
+// );

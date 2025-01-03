@@ -52,10 +52,12 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
+// will return true/false
 userSchema.methods.isPasswordCorrect = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
 
+// dont add async in this- if added token goes in normal form - wrong format
 userSchema.methods.generateAccessToken = async function () {
   return jwt.sign(
     {
@@ -70,7 +72,7 @@ userSchema.methods.generateAccessToken = async function () {
     }
   );
 };
-userSchema.methods.generateRefreshToken = async function () {
+userSchema.methods.generateRefreshToken = function () {
   return jwt.sign(
     {
       _id: this._id,
